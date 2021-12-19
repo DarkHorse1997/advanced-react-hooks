@@ -4,9 +4,9 @@
 import * as React from 'react'
 
 function countReducer(state, newState) {
-  if (typeof newState === 'function') {
-    const newSt = newState(state)
-    return {...state, ...newSt}
+  if (newState.type === 'INCREMENT') {
+    // Can also use switch statement for more actions
+    return {count: state.count + newState.step}
   }
 
   return {...state, ...newState} // Return an object which contains unchanged state properties
@@ -14,12 +14,12 @@ function countReducer(state, newState) {
 }
 
 function Counter({initialCount = 0, step = 1}) {
-  const [state, setState] = React.useReducer(countReducer, {
+  const [state, dispatch] = React.useReducer(countReducer, {
     count: initialCount,
   })
+
   const {count} = state // Destructing count from state
-  const increment = () =>
-    setState(currentState => ({count: currentState.count + step}))
+  const increment = () => dispatch({type: 'INCREMENT', step})
   return <button onClick={increment}>{count}</button>
 }
 
